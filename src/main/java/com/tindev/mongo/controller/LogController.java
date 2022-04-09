@@ -1,6 +1,7 @@
 package com.tindev.mongo.controller;
 
 
+import com.tindev.mongo.dto.LogDTO;
 import com.tindev.mongo.entity.LogEntity;
 import com.tindev.mongo.enums.TipoLog;
 import com.tindev.mongo.service.LogService;
@@ -71,7 +72,7 @@ public class LogController {
     }
 
     @GetMapping("/list")
-    public List<LogEntity> list() {
+    public List<LogDTO> list() {
         return logService.listAllLogs();
     }
 

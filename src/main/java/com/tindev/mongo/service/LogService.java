@@ -1,5 +1,7 @@
 package com.tindev.mongo.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tindev.mongo.dto.LogDTO;
 import com.tindev.mongo.entity.LogEntity;
 import com.tindev.mongo.enums.TipoLog;
 import com.tindev.mongo.repository.LogRepository;
@@ -11,19 +13,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LogService {
     private final LogRepository logRepository;
+    private final ObjectMapper objectMapper;
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     public void logUser(String descricao) {
-        LogEntity log = new LogEntity();
-        log.setTipoLog(TipoLog.USER);
-        log.setData(sdf.format(new Date()));
-        log.setDescricao(descricao);
+        LogDTO logDTO = new LogDTO();
+        logDTO.setTipoLog(TipoLog.USER);
+        logDTO.setData(sdf.format(new Date()));
+        logDTO.setDescricao(descricao);
+        LogEntity log = objectMapper.convertValue(logDTO, LogEntity.class);
         logRepository.save(log);
     }
 
@@ -59,8 +64,9 @@ public class LogService {
         logRepository.save(log);
     }
 
-    public List<LogEntity> listAllLogs() {
-        return logRepository.findAll();
+    public List<LogDTO> listAllLogs() {
+       return logRepository.findAll().stream().map(log -> objectMapper.convertValue(log, LogDTO.class)).collect(Collectors.toList());
+
     }
 
     public List<LogEntity> listLogsByTipoLog(TipoLog tipoLog) {
