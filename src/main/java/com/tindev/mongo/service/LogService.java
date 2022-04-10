@@ -6,6 +6,7 @@ import com.tindev.mongo.entity.LogEntity;
 import com.tindev.mongo.enums.TipoLog;
 import com.tindev.mongo.repository.LogRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -24,11 +25,20 @@ public class LogService {
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     public void logUser(String descricao) {
+
         LogDTO logDTO = new LogDTO();
         logDTO.setTipoLog(TipoLog.USER);
         logDTO.setData(sdf.format(new Date()));
         logDTO.setDescricao(descricao);
         LogEntity log = objectMapper.convertValue(logDTO, LogEntity.class);
+        logRepository.save(log);
+    }
+
+    public void log(TipoLog tipoLog, String descricao) {
+        LogEntity log = new LogEntity();
+        log.setTipoLog(tipoLog);
+        log.setData(sdf.format(new Date()));
+        log.setDescricao(descricao);
         logRepository.save(log);
     }
 
