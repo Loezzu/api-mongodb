@@ -17,4 +17,10 @@ public class LogDTO {
     private String descricao;
 
     private String data;
+
+    public LogDTO(TipoLog tipoLog, String data, String descricao) {
+        this.tipoLog = tipoLog;
+        this.data = data;
+        this.descricao = descricao;
+    }
 }

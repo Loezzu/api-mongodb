@@ -8,10 +8,7 @@ import com.tindev.mongo.repository.LogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,59 +21,14 @@ public class LogService {
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-    public void logUser(String descricao) {
-
-        LogDTO logDTO = new LogDTO();
-        logDTO.setTipoLog(TipoLog.USER);
-        logDTO.setData(sdf.format(new Date()));
-        logDTO.setDescricao(descricao);
-        LogEntity log = objectMapper.convertValue(logDTO, LogEntity.class);
-        logRepository.save(log);
-    }
-
     public void log(TipoLog tipoLog, String descricao) {
-        LogEntity log = new LogEntity();
-        log.setTipoLog(tipoLog);
-        log.setData(sdf.format(new Date()));
-        log.setDescricao(descricao);
-        logRepository.save(log);
-    }
-
-    public void logPersonInfo(String descricao) {
-        LogEntity log = new LogEntity();
-        log.setTipoLog(TipoLog.PERSONINFO);
-        log.setData(sdf.format(new Date()));
-        log.setDescricao(descricao);
-        logRepository.save(log);
-    }
-
-    public void logAddress(String descricao) {
-        LogEntity log = new LogEntity();
-        log.setTipoLog(TipoLog.ADDRESS);
-        log.setData(sdf.format(new Date()));
-        log.setDescricao(descricao);
-        logRepository.save(log);
-    }
-
-    public void logLike(String descricao) {
-        LogEntity log = new LogEntity();
-        log.setTipoLog(TipoLog.LIKE);
-        log.setData(sdf.format(new Date()));
-        log.setDescricao(descricao);
-        logRepository.save(log);
-    }
-
-    public void logMatch(String descricao) {
-        LogEntity log = new LogEntity();
-        log.setTipoLog(TipoLog.MATCH);
-        log.setData(sdf.format(new Date()));
-        log.setDescricao(descricao);
+        var log = new LogEntity();
+        BeanUtils.copyProperties(new LogDTO(tipoLog, sdf.format(new Date()), descricao), log);
         logRepository.save(log);
     }
 
     public List<LogDTO> listAllLogs() {
        return logRepository.findAll().stream().map(log -> objectMapper.convertValue(log, LogDTO.class)).collect(Collectors.toList());
-
     }
 
     public List<LogEntity> listLogsByTipoLog(TipoLog tipoLog) {

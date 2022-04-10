@@ -19,16 +19,6 @@ public class LogController {
     @Autowired
     private LogService logService;
 
-//    @PostMapping("/save-user")
-//    public void saveUser(String descricao) {
-//        try {
-//            logService.logUser(descricao);
-//            new ResponseEntity<>("Log criado com sucesso", HttpStatus.OK);
-//        } catch (Exception e) {
-//            new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-
     @PostMapping("/save-log")
     public void saveLog(TipoLog tipoLog, String descricao) {
         try {
@@ -38,48 +28,6 @@ public class LogController {
             new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//
-//    @PostMapping("/save-person-info")
-//    public void savePersonInfo(String descricao) {
-//        try {
-//            logService.logPersonInfo(descricao);
-//            new ResponseEntity<>("Log criado com sucesso", HttpStatus.OK);
-//        } catch (Exception e) {
-//            new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//
-//
-//    @PostMapping("/save-address")
-//    public void saveAddress(String descricao) {
-//        try {
-//            logService.logAddress(descricao);
-//            new ResponseEntity<>("Log criado com sucesso", HttpStatus.OK);
-//        } catch (Exception e) {
-//            new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//
-//
-//    @PostMapping("/save-like")
-//    public void saveLike(String descricao) {
-//        try {
-//            logService.logLike(descricao);
-//            new ResponseEntity<>("Log criado com sucesso", HttpStatus.OK);
-//        } catch (Exception e) {
-//            new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//
-//    @PostMapping("/save-match")
-//    public void saveMatch(String descricao) {
-//        try {
-//            logService.logMatch(descricao);
-//            new ResponseEntity<>("Log criado com sucesso", HttpStatus.OK);
-//        } catch (Exception e) {
-//            new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
     @GetMapping("/list")
     public List<LogDTO> list() {
