@@ -38,7 +38,6 @@ public class LogController {
             new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 //
 //    @PostMapping("/save-person-info")
 //    public void savePersonInfo(String descricao) {
