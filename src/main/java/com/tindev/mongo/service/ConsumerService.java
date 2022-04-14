@@ -29,7 +29,7 @@ public class ConsumerService {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     @KafkaListener(
-            topicPartitions = @TopicPartition(topic = "${kafka.topic.teste}", partitions = {"0"}),
+            topicPartitions = @TopicPartition(topic = "${kafka.topic.log}", partitions = {"0"}),
             groupId = "${kafka.group-id}",
             containerFactory = "listenerContainerFactory",
             clientIdPrefix = "geral")

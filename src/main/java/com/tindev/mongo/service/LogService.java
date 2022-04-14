@@ -34,7 +34,7 @@ public class LogService {
 
     public void salvarLog(LogDTO logDTO) {
         var log = new LogEntity();
-        BeanUtils.copyProperties(log, log);
+        BeanUtils.copyProperties(logDTO, log);
         log.setData(sdfComplete.format(new Date()));
         logRepository.save(log);
     }

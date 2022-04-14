@@ -5,5 +5,6 @@ public enum TipoLog {
     PERSONINFO,
     ADDRESS,
     LIKE,
-    MATCH
+    MATCH,
+    CONTACT
 }
