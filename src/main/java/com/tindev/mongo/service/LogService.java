@@ -9,8 +9,8 @@ import com.tindev.mongo.enums.TipoLog;
 import com.tindev.mongo.repository.LogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -20,55 +20,53 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LogService {
 
-    @Autowired
     private final LogRepository logRepository;
+    private final ObjectMapper objectMapper;
 
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-    public void log(TipoLog tipoLog, String descricao) {
-        var log = new LogEntity();
-        log = logRepository.save(log);
-        BeanUtils.copyProperties(new LogDTO( log.getId(), tipoLog, sdf.format(new Date()), descricao), log);
-    }
+    SimpleDateFormat sdfComplete = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    SimpleDateFormat sdfDayMonthYear = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-//    public void salvarLog(LogDTO logDTO) {
+//    public void log(TipoLog tipoLog, String descricao) {
 //        var log = new LogEntity();
-//        BeanUtils.copyProperties(logDTO, log);
-//        log.setData(sdf.format(new Date()));
-//        logRepository.save(log);
+//        log = logRepository.save(log);
+//        BeanUtils.copyProperties(new LogDTO( log.getId(), tipoLog, sdf.format(new Date()), descricao), log);
 //    }
 
-    public void salvarLog(LogCreateDTO logCreateDTO) {
+    public void salvarLog(LogDTO logDTO) {
         var log = new LogEntity();
-        BeanUtils.copyProperties(logCreateDTO, log);
-        log.setData(sdf.format(new Date()));
+        BeanUtils.copyProperties(log, log);
+        log.setData(sdfComplete.format(new Date()));
         logRepository.save(log);
     }
 
+    public List<LogDTO> listAllLogs() {
+       return logRepository.findAll().stream().map(log -> objectMapper.convertValue(log, LogDTO.class)).collect(Collectors.toList());
+    }
 
+    public List<LogDTO> listLogsByTipoLog(TipoLog tipoLog) {
+        return logRepository.findAllByTipoLog(tipoLog).stream().map(log -> objectMapper.convertValue(log, LogDTO.class)).collect(Collectors.toList());
+    }
 
-//    public List<LogDTO> listAllLogs() {
-//       return logRepository.findAll().stream().map(log -> objectMapper.convertValue(log, LogDTO.class)).collect(Collectors.toList());
-//    }
-//
-//    public List<LogDTO> listLogsByTipoLog(TipoLog tipoLog) {
-//        return logRepository.findAllByTipoLog(tipoLog).stream().map(log -> objectMapper.convertValue(log, LogDTO.class)).collect(Collectors.toList());
-//    }
-//
-//    public List<LogDTOContador> groupByTipoLogAndCount() {
-//        return this.logRepository.groupByTipoLogAndCount().stream().map(l->{
-//            LogDTOContador agregateDTO = new LogDTOContador(l.getTipoLog(), l.getQuantidade());
-//            return agregateDTO;
-//        }).collect(Collectors.toList());
-//    }
-//
-//    public List<LogDTO> listAllByData(String date){
-//        return logRepository.findAllByDataContains(date).stream().map(logEntity -> objectMapper.convertValue(logEntity, LogDTO.class)).collect(Collectors.toList());
-//    }
-//
-//    public LogDTOContador countLogsByTipo(TipoLog tipoLog){
-//        LogDTOContador log = new LogDTOContador();
-//        log.setQuantidade(logRepository.countByTipoLog(tipoLog));
-//        log.setTipoLog(tipoLog);
-//        return log;
-//    }
+    public List<LogDTOContador> groupByTipoLogAndCount() {
+        return this.logRepository.groupByTipoLogAndCount().stream().map(l->{
+            return new LogDTOContador(l.getTipoLog(), l.getQuantidade());
+        }).collect(Collectors.toList());
+    }
+
+    public List<LogDTO> listAllByData(String date) throws Exception {
+        String dataCorrected = date.replace("/","-");
+        Date dataAtual = new Date();
+        Date dateReceived = sdfDayMonthYear.parse(dataCorrected);
+        if(dateReceived.after(dataAtual)){
+            throw new Exception("Esse dia não chegou!");
+        }
+        return logRepository.findAllByDataContains(date).stream().map(logEntity -> objectMapper.convertValue(logEntity, LogDTO.class)).collect(Collectors.toList());
+    }
+
+    public LogDTOContador countLogsByTipo(TipoLog tipoLog){
+        LogDTOContador log = new LogDTOContador();
+        log.setQuantidade(logRepository.countByTipoLog(tipoLog));
+        log.setTipoLog(tipoLog);
+        return log;
+    }
 }

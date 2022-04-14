@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LogCreateDTO {
+
     @Enumerated(EnumType.STRING)
     private TipoLog tipoLog;
     private String descricao;
