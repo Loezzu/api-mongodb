@@ -1,6 +1,7 @@
 package com.tindev.mongo.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tindev.mongo.dto.LogCreateDTO;
 import com.tindev.mongo.dto.LogDTO;
 import com.tindev.mongo.dto.LogDTOContador;
 import com.tindev.mongo.entity.LogEntity;
@@ -8,6 +9,7 @@ import com.tindev.mongo.enums.TipoLog;
 import com.tindev.mongo.repository.LogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class LogService {
+
+    @Autowired
     private final LogRepository logRepository;
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -26,11 +30,21 @@ public class LogService {
         BeanUtils.copyProperties(new LogDTO( log.getId(), tipoLog, sdf.format(new Date()), descricao), log);
     }
 
-    public void salvarLog(LogDTO logDTO) {
+//    public void salvarLog(LogDTO logDTO) {
+//        var log = new LogEntity();
+//        BeanUtils.copyProperties(logDTO, log);
+//        log.setData(sdf.format(new Date()));
+//        logRepository.save(log);
+//    }
+
+    public void salvarLog(LogCreateDTO logCreateDTO) {
         var log = new LogEntity();
-        BeanUtils.copyProperties(logDTO, log);
+        BeanUtils.copyProperties(logCreateDTO, log);
+        log.setData(sdf.format(new Date()));
         logRepository.save(log);
     }
+
+
 
 //    public List<LogDTO> listAllLogs() {
 //       return logRepository.findAll().stream().map(log -> objectMapper.convertValue(log, LogDTO.class)).collect(Collectors.toList());

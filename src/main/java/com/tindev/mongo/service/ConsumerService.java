@@ -2,9 +2,11 @@ package com.tindev.mongo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tindev.mongo.dto.LogCreateDTO;
 import com.tindev.mongo.dto.LogDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -20,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 public class ConsumerService {
 
     private final ObjectMapper objectMapper;
+
+    @Autowired
     private LogService logService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -36,10 +40,12 @@ public class ConsumerService {
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic
     ) throws JsonProcessingException {
 
-        LogDTO logDTO = objectMapper.readValue(message, LogDTO.class);
-        logService.salvarLog(logDTO);
+        LogCreateDTO logCreateDTO = objectMapper.readValue(message, LogCreateDTO.class);
+//        LogDTO logDTO = objectMapper.readValue(message, LogDTO.class);
 
-        System.out.println("\n\n\n\n\n\nmensagem: " + message + "\n\n\n\n\n\n"+logDTO.getDescricao());
+        logService.salvarLog(logCreateDTO);
+
+        System.out.println("\n\n\n\n\n\nmensagem: " + message + "\n\n\n\n\n\n"+logCreateDTO.getDescricao());
 
         log.info("#### offset -> '{}' key -> '{}' -> Consumed Object message -> '{}'  ", offset, key, message);
     }
