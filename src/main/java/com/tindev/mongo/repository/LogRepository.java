@@ -23,6 +23,8 @@ public interface LogRepository extends MongoRepository<LogEntity, String> {
 
     List<LogEntity> findAllByDataContains(String data);
 
+    Long countAllByDataContains(String data);
+
     Integer countByTipoLog(TipoLog tipoLog);
 
 }

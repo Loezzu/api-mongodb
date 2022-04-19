@@ -9,9 +9,11 @@ import com.tindev.mongo.enums.TipoLog;
 import com.tindev.mongo.repository.LogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +24,8 @@ public class LogService {
 
     private final LogRepository logRepository;
     private final ObjectMapper objectMapper;
+
+    private final EmailService emailService;
 
     SimpleDateFormat sdfComplete = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     SimpleDateFormat sdfDayMonthYear = new SimpleDateFormat("dd-MM-yyyy");
@@ -55,6 +59,20 @@ public class LogService {
             throw new Exception("Esse dia não chegou!");
         }
         return logRepository.findAllByDataContains(date).stream().map(logEntity -> objectMapper.convertValue(logEntity, LogDTO.class)).collect(Collectors.toList());
+    }
+
+
+    public Long countLogsByData() throws Exception {
+        LogEntity log = new LogEntity();
+        log.setData(sdfDayMonthYear.format(new Date()));
+        return logRepository.countAllByDataContains(log.getData());
+    }
+
+
+    @Scheduled(cron = "59 59 23 * * *")
+    public void mandarEmailDiarioDeLogs() throws Exception {
+        Long quantidade = countLogsByData();
+        emailService.sendSimpleMessage(quantidade);
     }
 
     public LogDTOContador countLogsByTipo(TipoLog tipoLog){

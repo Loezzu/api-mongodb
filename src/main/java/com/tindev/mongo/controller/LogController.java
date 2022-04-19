@@ -47,4 +47,9 @@ public class LogController implements LogAPI{
         return logService.listAllByData(data);
     }
 
+    @GetMapping("count-all-by-data")
+    public Long countLogsToday() throws Exception {
+        return logService.countLogsByData();
+    }
+
 }
