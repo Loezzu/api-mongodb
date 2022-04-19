@@ -22,16 +22,6 @@ public class LogController implements LogAPI{
     @Autowired
     private LogService logService;
 
-//    @PostMapping("/save-log")
-//    public void saveLog(TipoLog tipoLog, String descricao) {
-//        try {
-//            logService.log(tipoLog, descricao);
-//            new ResponseEntity<>("Log criado com sucesso", HttpStatus.OK);
-//        } catch (Exception e) {
-//            new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-
     @GetMapping("/list")
     public List<LogDTO> list() {
         return logService.listAllLogs();

@@ -24,13 +24,7 @@ public class LogService {
     private final ObjectMapper objectMapper;
 
     SimpleDateFormat sdfComplete = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-    SimpleDateFormat sdfDayMonthYear = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-
-//    public void log(TipoLog tipoLog, String descricao) {
-//        var log = new LogEntity();
-//        log = logRepository.save(log);
-//        BeanUtils.copyProperties(new LogDTO( log.getId(), tipoLog, sdf.format(new Date()), descricao), log);
-//    }
+    SimpleDateFormat sdfDayMonthYear = new SimpleDateFormat("dd-MM-yyyy");
 
     public void salvarLog(LogDTO logDTO) {
         var log = new LogEntity();
